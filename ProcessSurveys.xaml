@@ -1,0 +1,1287 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="ProcessSurveys" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:snm="clr-namespace:System.Net.Mail;assembly=System" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="Settings" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>1308,17649.3333333333</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>ProcessSurveys_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <scg:List x:TypeArguments="x:String" Capacity="28">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>UiPath.Excel</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>Microsoft.VisualBasic.CompilerServices</x:String>
+      <x:String>System.Globalization</x:String>
+      <x:String>System.Text.RegularExpressions</x:String>
+      <x:String>UiPath.Vision.OCR</x:String>
+      <x:String>UiPath.OCR.Contracts</x:String>
+    </scg:List>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="24">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>UiPath.Vision.Core</AssemblyReference>
+      <AssemblyReference>UiPath.OCR.Contracts</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+    </scg:List>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="The process reads incoming emails looking for Weekly Survey replies and updates the Master file accordingly" DisplayName="ProcessSurveys" sap:VirtualizedContainerService.HintSize="1318,17584.6666666667" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="scg:List(snm:MailMessage)" Name="foundReport" />
+      <Variable x:TypeArguments="sd:DataTable" Name="EmployeeData" />
+      <Variable x:TypeArguments="x:String" Name="theDateTmp" />
+      <Variable x:TypeArguments="s:DateTime" Name="theDate" />
+      <Variable x:TypeArguments="x:String" Name="theDay" />
+      <Variable x:TypeArguments="s:DateTime" Name="theStartOfWeek" />
+      <Variable x:TypeArguments="x:String" Name="updateYes" />
+      <Variable x:TypeArguments="x:String" Name="theEmployee" />
+      <Variable x:TypeArguments="x:Int32" Name="second_char" />
+      <Variable x:TypeArguments="x:Int32" Name="first_char" />
+      <Variable x:TypeArguments="x:String" Name="theEmployeeTmp" />
+      <Variable x:TypeArguments="x:String" Name="theCell" />
+      <Variable x:TypeArguments="scg:IEnumerable(x:String)" Name="reportFileName" />
+      <Variable x:TypeArguments="x:String" Name="WFH" />
+      <Variable x:TypeArguments="x:String" Name="Office" />
+      <Variable x:TypeArguments="x:String" Name="Travelling" />
+      <Variable x:TypeArguments="x:String" Name="COVID19" />
+      <Variable x:TypeArguments="x:String" Name="Quarantine" />
+      <Variable x:TypeArguments="x:String" Name="NonEmployees" />
+      <Variable x:TypeArguments="x:String" Name="PublicTrans" />
+      <Variable x:TypeArguments="x:String" Name="Tested" />
+      <Variable x:TypeArguments="x:String" Name="CountryTravel01" />
+      <Variable x:TypeArguments="x:String" Name="TravelCity01" />
+      <Variable x:TypeArguments="x:String" Name="travel01Start" />
+      <Variable x:TypeArguments="x:String" Name="Travel01End" />
+      <Variable x:TypeArguments="x:String" Name="CountryTravel02" />
+      <Variable x:TypeArguments="x:String" Name="TravelCity02" />
+      <Variable x:TypeArguments="x:String" Name="Travel02Start" />
+      <Variable x:TypeArguments="x:String" Name="Travel02End" />
+      <Variable x:TypeArguments="ui:WorkbookApplication" Name="Attachment" />
+      <Variable x:TypeArguments="x:Int32" Name="theIntCell" />
+      <Variable x:TypeArguments="x:String" Name="Column_Name" />
+      <Variable x:TypeArguments="x:Int32" Name="modulo" />
+      <Variable x:TypeArguments="x:String" Name="theCellID" />
+      <Variable x:TypeArguments="x:String" Name="theStartCellID" />
+      <Variable x:TypeArguments="x:String" Name="RiskCell" />
+      <Variable x:TypeArguments="ui:GenericValue" Name="OfficeRoad" />
+      <Variable x:TypeArguments="ui:GenericValue" Name="OfficeNo" />
+      <Variable x:TypeArguments="x:String" Name="Sunday" />
+      <Variable x:TypeArguments="x:String" Name="Friday" />
+      <Variable x:TypeArguments="x:String" Name="Saturday" />
+      <Variable x:TypeArguments="x:String" Name="Wednesday" />
+      <Variable x:TypeArguments="x:String" Name="Thursday" />
+      <Variable x:TypeArguments="x:String" Name="Tuesday" />
+      <Variable x:TypeArguments="x:String" Name="Monday" />
+      <Variable x:TypeArguments="x:Int32" Name="Risk" />
+      <Variable x:TypeArguments="x:String" Name="FName" />
+      <Variable x:TypeArguments="x:String" Name="SName" />
+      <Variable x:TypeArguments="s:DateTime" Name="theDateAsDate" />
+      <Variable x:TypeArguments="s:DateTime" Name="surveyDateAsDate" />
+      <Variable x:TypeArguments="x:String" Name="EmployeeForm" />
+      <Variable x:TypeArguments="x:String" Name="Department" />
+      <Variable x:TypeArguments="ui:GenericValue" Name="LocationGEN" />
+      <Variable x:TypeArguments="x:String" Name="theLocation" />
+      <Variable x:TypeArguments="x:Int32" Name="theCurrentRow" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke InitAllSettings workflow" sap:VirtualizedContainerService.HintSize="1276,86.6666666666667" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="InitAllSettings.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ConfigFile">Config.xlsx</InArgument>
+        <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="out_Config">[Settings]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:GetOutlookMailMessages Account="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Get Filtered Outlook Messages" Filter="[subject]='Weekly Health Assessment'" GetAttachements="False" sap:VirtualizedContainerService.HintSize="1276,22" sap2010:WorkflowViewState.IdRef="GetOutlookMailMessages_1" MailFolder="Inbox" MarkAsRead="True" Messages="[foundReport]" OnlyUnreadMessages="True" Top="30" />
+    <ui:ForEach x:TypeArguments="snm:MailMessage" CurrentIndex="{x:Null}" DisplayName="For Each Outlook Message We Find" sap:VirtualizedContainerService.HintSize="1276,17273.3333333333" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[foundReport]">
+      <ui:ForEach.Body>
+        <ActivityAction x:TypeArguments="snm:MailMessage">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="snm:MailMessage" Name="report" />
+          </ActivityAction.Argument>
+          <TryCatch DisplayName="Try Catch" sap:VirtualizedContainerService.HintSize="1239.33333333333,17136" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <TryCatch.Try>
+              <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="1200.66666666667,16901.3333333333" sap2010:WorkflowViewState.IdRef="Sequence_2">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <Assign DisplayName="Find the Employee Name" sap:VirtualizedContainerService.HintSize="1158.66666666667,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_1">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[theEmployeeTmp]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[report.from.ToString]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <ui:MultipleAssign DisplayName="Assign the Temperature value and calculate the Dates" sap:VirtualizedContainerService.HintSize="1158.66666666667,342.666666666667" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
+                  <ui:MultipleAssign.AssignOperations>
+                    <scg:List x:TypeArguments="ui:AssignOperation" Capacity="16">
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_1">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:String">[theDateTmp]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:String">[report.Headers("Date").ToString]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_136">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:String">[theDateTmp]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:String">[theDateTmp.Substring(0,10)]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_2">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="s:DateTime">[theDate]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="s:DateTime">[Datetime.ParseExact(theDateTmp,“MM/dd/yyyy”,System.Globalization.CultureInfo.InvariantCulture)]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_3">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:String">[theDay]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:String">[theDateAsDate.DayOfWeek.ToString]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_4">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="s:DateTime">[theStartOfWeek]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="s:DateTime">[theDate.AddDays((theDate.DayOfWeek - DayOfWeek.Monday) * -1)]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_5">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:String">[updateYes]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:String">No</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_6">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Int32">[first_char]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Int32">[theEmployeeTmp.IndexOf("&lt;")]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_7">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:Int32">[second_char]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:Int32">[theEmployeeTmp.LastIndexOf("&gt;")]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_8">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:String">[theEmployee]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:String">[theEmployeeTmp.Substring(first_char+1,(second_char - first_char-1))]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                    </scg:List>
+                  </ui:MultipleAssign.AssignOperations>
+                </ui:MultipleAssign>
+                <ui:SaveMailAttachments Attachments="[reportFileName]" DisplayName="Save Attachments" FolderPath="C:\Temp" sap:VirtualizedContainerService.HintSize="1158.66666666667,86.6666666666667" sap2010:WorkflowViewState.IdRef="SaveMailAttachments_1" Message="[report]" />
+                <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For Each" sap:VirtualizedContainerService.HintSize="1158.66666666667,541.333333333333" sap2010:WorkflowViewState.IdRef="ForEach`1_2" Values="[reportFileName]">
+                  <ui:ForEach.Body>
+                    <ActivityAction x:TypeArguments="x:String">
+                      <ActivityAction.Argument>
+                        <DelegateInArgument x:TypeArguments="x:String" Name="item" />
+                      </ActivityAction.Argument>
+                      <Sequence sap:VirtualizedContainerService.HintSize="526,404" sap2010:WorkflowViewState.IdRef="Sequence_28">
+                        <Sequence.Variables>
+                          <Variable x:TypeArguments="x:Boolean" Name="isMatch" />
+                        </Sequence.Variables>
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                        <ui:IsMatch DisplayName="Is Match" sap:VirtualizedContainerService.HintSize="484,58.6666666666667" sap2010:WorkflowViewState.IdRef="IsMatch_1" Input="[item]" IsBuilderTabModified="False" Pattern="employee-form.*xlsx" RegexOption="IgnoreCase, Compiled" Result="[isMatch]" />
+                        <If Condition="[isMatch]" sap:VirtualizedContainerService.HintSize="484,213.333333333333" sap2010:WorkflowViewState.IdRef="If_10">
+                          <If.Then>
+                            <Assign sap:VirtualizedContainerService.HintSize="262,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_29">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:String">[EmployeeForm]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:String">[item]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                          </If.Then>
+                        </If>
+                      </Sequence>
+                    </ActivityAction>
+                  </ui:ForEach.Body>
+                </ui:ForEach>
+                <If Condition="[EmployeeForm=&quot;&quot; or reportFileName.Count =0]" sap:VirtualizedContainerService.HintSize="1158.66666666667,212" sap2010:WorkflowViewState.IdRef="If_11">
+                  <If.Then>
+                    <Throw Exception="[New exception(&quot;Missing attachments&quot;)]" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="Throw_1" />
+                  </If.Then>
+                </If>
+                <ui:ExcelApplicationScope Password="{x:Null}" DisplayName="Excel Application Scope" sap:VirtualizedContainerService.HintSize="1158.66666666667,2614" sap2010:WorkflowViewState.IdRef="ExcelApplicationScope_2" Workbook="[Attachment]" WorkbookPath="[EmployeeForm]">
+                  <ui:ExcelApplicationScope.Body>
+                    <ActivityAction x:TypeArguments="ui:WorkbookApplication">
+                      <ActivityAction.Argument>
+                        <DelegateInArgument x:TypeArguments="ui:WorkbookApplication" Name="ExcelWorkbookScope" />
+                      </ActivityAction.Argument>
+                      <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="568,2505.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_13">
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                        <ui:ExcelReadCell Cell="C5" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_1" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="s:DateTime">[surveyDateAsDate]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C6" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_2" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[WFH]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C8" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_3" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[Office]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C9" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_18" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="ui:GenericValue">[OfficeRoad]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C10" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_19" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="ui:GenericValue">[OfficeNo]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C11" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_20" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[Travelling]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C12" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_4" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="ui:GenericValue">[LocationGEN]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <Assign sap:VirtualizedContainerService.HintSize="526,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_30">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[theLocation]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[LocationGEN.ToString]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <ui:ExcelReadCell Cell="C14" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_5" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[Tested]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C16" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_6" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[Quarantine]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C18" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_7" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[COVID19]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C19" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_8" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[PublicTrans]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C20" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_9" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[NonEmployees]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C25" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_10" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[CountryTravel01]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C26" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_11" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[TravelCity01]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C27" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_12" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[travel01Start]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C28" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_13" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[Travel01End]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C29" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_14" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[CountryTravel02]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C30" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_15" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[TravelCity02]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C31" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_16" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[Travel02Start]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <ui:ExcelReadCell Cell="C32" DisplayName="Read Cell" sap:VirtualizedContainerService.HintSize="526,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadCell_17" SheetName="Sheet1">
+                          <ui:ExcelReadCell.Result>
+                            <OutArgument x:TypeArguments="x:String">[Travel02End]</OutArgument>
+                          </ui:ExcelReadCell.Result>
+                        </ui:ExcelReadCell>
+                        <If Condition="[surveyDateAsDate.ToString.Length &gt; 5]" DisplayName="If user gave a survey date override startOfWeek Value" sap:VirtualizedContainerService.HintSize="526,338.666666666667" sap2010:WorkflowViewState.IdRef="If_9">
+                          <If.Then>
+                            <Sequence sap:VirtualizedContainerService.HintSize="380,189.333333333333" sap2010:WorkflowViewState.IdRef="Sequence_25">
+                              <sap:WorkflowViewStateService.ViewState>
+                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                </scg:Dictionary>
+                              </sap:WorkflowViewStateService.ViewState>
+                              <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="338,97.3333333333333" sap2010:WorkflowViewState.IdRef="MultipleAssign_14">
+                                <ui:MultipleAssign.AssignOperations>
+                                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+                                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_139">
+                                      <ui:AssignOperation.To>
+                                        <OutArgument x:TypeArguments="s:DateTime">[theStartOfWeek]</OutArgument>
+                                      </ui:AssignOperation.To>
+                                      <ui:AssignOperation.Value>
+                                        <InArgument x:TypeArguments="s:DateTime">[theDate.AddDays((theDate.DayOfWeek - DayOfWeek.Monday) * -1)]</InArgument>
+                                      </ui:AssignOperation.Value>
+                                    </ui:AssignOperation>
+                                  </scg:List>
+                                </ui:MultipleAssign.AssignOperations>
+                              </ui:MultipleAssign>
+                            </Sequence>
+                          </If.Then>
+                        </If>
+                      </Sequence>
+                    </ActivityAction>
+                  </ui:ExcelApplicationScope.Body>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:ExcelApplicationScope>
+                <ui:ExcelCloseWorkbook DisplayName="Close Workbook" sap:VirtualizedContainerService.HintSize="1158.66666666667,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelCloseWorkbook_1" Workbook="[Attachment]" />
+                <ui:ExcelApplicationScope Password="{x:Null}" DisplayName="Excel Application Scope" sap:VirtualizedContainerService.HintSize="1158.66666666667,12486" sap2010:WorkflowViewState.IdRef="ExcelApplicationScope_3" WorkbookPath="[settings(&quot;MasterPath&quot;).ToString]">
+                  <ui:ExcelApplicationScope.Body>
+                    <ActivityAction x:TypeArguments="ui:WorkbookApplication">
+                      <ActivityAction.Argument>
+                        <DelegateInArgument x:TypeArguments="ui:WorkbookApplication" Name="ExcelWorkbookScope" />
+                      </ActivityAction.Argument>
+                      <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="1124.66666666667,12377.3333333333" sap2010:WorkflowViewState.IdRef="Sequence_24">
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                        <ui:ExcelReadRange AddHeaders="True" DataTable="[EmployeeData]" DisplayName="Read Range" sap:VirtualizedContainerService.HintSize="1082.66666666667,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadRange_3" SheetName="Sheet1">
+                          <ui:ExcelReadRange.Range>
+                            <InArgument x:TypeArguments="x:String">
+                              <Literal x:TypeArguments="x:String" Value="" />
+                            </InArgument>
+                          </ui:ExcelReadRange.Range>
+                        </ui:ExcelReadRange>
+                        <ui:ForEachRow CurrentIndex="[theCurrentRow]" DataTable="[EmployeeData]" DisplayName="For Each Row in the Excel" sap:VirtualizedContainerService.HintSize="1082.66666666667,4983.33333333333" sap2010:WorkflowViewState.IdRef="ForEachRow_3">
+                          <ui:ForEachRow.Body>
+                            <ActivityAction x:TypeArguments="sd:DataRow">
+                              <ActivityAction.Argument>
+                                <DelegateInArgument x:TypeArguments="sd:DataRow" Name="employee" />
+                              </ActivityAction.Argument>
+                              <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="568,4834.66666666667" sap2010:WorkflowViewState.IdRef="Sequence_18">
+                                <sap:WorkflowViewStateService.ViewState>
+                                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                  </scg:Dictionary>
+                                </sap:WorkflowViewStateService.ViewState>
+                                <If Condition="[employee.Item(&quot;Email&quot;).ToString.Contains(theEmployee) and employee.Item(&quot;Week Start&quot;).ToString.Contains(theStartofWeek.ToString)]" DisplayName="If we have a matching Date and Employee" sap:VirtualizedContainerService.HintSize="526,4742.66666666667" sap2010:WorkflowViewState.IdRef="If_5">
+                                  <If.Then>
+                                    <Sequence DisplayName="Sequence - get values and set the col and row" sap:VirtualizedContainerService.HintSize="380,4593.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_17">
+                                      <sap:WorkflowViewStateService.ViewState>
+                                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                        </scg:Dictionary>
+                                      </sap:WorkflowViewStateService.ViewState>
+                                      <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="338,496" sap2010:WorkflowViewState.IdRef="MultipleAssign_13">
+                                        <ui:MultipleAssign.AssignOperations>
+                                          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="16">
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_122">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[theCell]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[EmployeeData.Columns.IndexOf(theDay).ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_123">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:Int32">[theIntCell]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:Int32">[Int32.parse(theCell)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_124">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:Int32">[modulo]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:Int32">[(theIntCell) mod 26]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_125">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Column_Name]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[Convert.ToChar(65 + modulo).ToString()]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_126">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[theCellID]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[Column_Name + (theCurrentRow + 2).ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_127">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[theStartCellID]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">["A" + (theCurrentRow + 2).ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_128">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[RiskCell]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">["G" + (theCurrentRow + 2).ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_129">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Monday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[employee.Item("Monday").ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_130">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Tuesday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[employee.Item("Tuesday").ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_131">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Wednesday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[employee.Item("Wednesday").ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_132">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Thursday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[employee.Item("Thursday").ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_133">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Friday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[employee.Item("Friday").ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_134">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Saturday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[employee.Item("Saturday").ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_135">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Sunday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[employee.Item("Sunday").ToString]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                          </scg:List>
+                                        </ui:MultipleAssign.AssignOperations>
+                                      </ui:MultipleAssign>
+                                      <Assign sap:VirtualizedContainerService.HintSize="338,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_31">
+                                        <Assign.To>
+                                          <OutArgument x:TypeArguments="x:String">[theLocation]</OutArgument>
+                                        </Assign.To>
+                                        <Assign.Value>
+                                          <InArgument x:TypeArguments="x:String">[LocationGEN.ToString]</InArgument>
+                                        </Assign.Value>
+                                      </Assign>
+                                      <ui:ExcelWriteCell Cell="[&quot;F&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_63" SheetName="Sheet1" Text="[theLocation]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;O&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_9" SheetName="Sheet1" Text="[WFH]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;S&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_10" SheetName="Sheet1" Text="[Travelling]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;P&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_11" SheetName="Sheet1" Text="[Office]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;Q&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_12" SheetName="Sheet1" Text="[OfficeRoad]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;R&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_13" SheetName="Sheet1" Text="[OfficeNo]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;T&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_14" SheetName="Sheet1" Text="[Tested]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;U&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_15" SheetName="Sheet1" Text="[Quarantine]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;V&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_16" SheetName="Sheet1" Text="[COVID19]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;W&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_17" SheetName="Sheet1" Text="[PublicTrans]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;X&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_18" SheetName="Sheet1" Text="[NonEmployees]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;Y&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_19" SheetName="Sheet1" Text="[CountryTravel01]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;Z&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_20" SheetName="Sheet1" Text="[TravelCity01]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;AA&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_21" SheetName="Sheet1" Text="[travel01Start]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;AB&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_22" SheetName="Sheet1" Text="[Travel01End]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;AC&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_23" SheetName="Sheet1" Text="[CountryTravel02]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;AD&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_24" SheetName="Sheet1" Text="[TravelCity02]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;AE&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_25" SheetName="Sheet1" Text="[Travel02Start]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;AF&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_26" SheetName="Sheet1" Text="[Travel02End]" />
+                                      <ui:MultipleAssign DisplayName="Change NULL to 0" sap:VirtualizedContainerService.HintSize="338,373.333333333333" sap2010:WorkflowViewState.IdRef="MultipleAssign_9">
+                                        <ui:MultipleAssign.AssignOperations>
+                                          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="32">
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_91">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Monday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[if(string.IsNullorEmpty(Monday),"0",Monday.ToString)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_92">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Tuesday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[if(string.IsNullorEmpty(Tuesday),"0",Tuesday.ToString)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_93">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Wednesday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[if(string.IsNullorEmpty(Wednesday),"0",Wednesday.ToString)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_94">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Thursday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[if(string.IsNullorEmpty(Thursday),"0",Thursday.ToString)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_95">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Friday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[if(string.IsNullorEmpty(Friday),"0",Friday.ToString)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_96">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Saturday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[if(string.IsNullorEmpty(Saturday),"0",Saturday.ToString)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_97">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Sunday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[if(string.IsNullorEmpty(Sunday),"0",Sunday.ToString)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_158">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Office]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[if(string.IsNullorEmpty(Office),"0",Office.ToString)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_159">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[CountryTravel01]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[if(string.IsNullorEmpty(CountryTravel01),"0",CountryTravel01.ToString)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_160">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[CountryTravel02]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[if(string.IsNullorEmpty(CountryTravel02),"0",CountryTravel02.ToString)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                          </scg:List>
+                                        </ui:MultipleAssign.AssignOperations>
+                                      </ui:MultipleAssign>
+                                      <ui:MultipleAssign DisplayName="Copy the weekly values" sap:VirtualizedContainerService.HintSize="338,588" sap2010:WorkflowViewState.IdRef="MultipleAssign_10">
+                                        <ui:MultipleAssign.AssignOperations>
+                                          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="32">
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_98">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Monday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(Cint(Monday) &gt;37,"3","0")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_99">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Tuesday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(Cint(Tuesday)&gt;37,“3”,“0”)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_100">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Wednesday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(Cint(Wednesday)&gt;37,“3”,“0”)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_157">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Thursday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(Cint(Thursday)&gt;37,“3”,“0”)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_102">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Friday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(Cint(Friday)&gt;37,“3”,“0”)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_103">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Saturday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(Cint(Saturday)&gt;37,“3”,“0”)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_104">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Sunday]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(Cint(Sunday)&gt;37,“3”,“0”)]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_105">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[WFH]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[If(WFH="Yes","0","2")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_106">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Travelling]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(Travelling="Yes","2","0")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_107">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Office]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[If(Office.Length&gt;2,"1","0")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_108">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Tested]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(Travelling="Yes","1","0")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_109">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[Quarantine]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(Quarantine="Yes","1","0")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_110">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[COVID19]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(COVID19="Yes","9","0")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_111">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[PublicTrans]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(PublicTrans="Yes","2","0")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_112">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[NonEmployees]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(NonEmployees="Yes","1","0")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_113">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[CountryTravel01]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(CountryTravel01="Yes","3","0")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_114">
+                                              <ui:AssignOperation.To>
+                                                <OutArgument x:TypeArguments="x:String">[CountryTravel02]</OutArgument>
+                                              </ui:AssignOperation.To>
+                                              <ui:AssignOperation.Value>
+                                                <InArgument x:TypeArguments="x:String">[IF(CountryTravel02="Yes","3","0")]</InArgument>
+                                              </ui:AssignOperation.Value>
+                                            </ui:AssignOperation>
+                                          </scg:List>
+                                        </ui:MultipleAssign.AssignOperations>
+                                      </ui:MultipleAssign>
+                                      <Assign DisplayName="Calculate RISK Indicator" sap:VirtualizedContainerService.HintSize="338,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_22">
+                                        <Assign.To>
+                                          <OutArgument x:TypeArguments="x:Int32">[Risk]</OutArgument>
+                                        </Assign.To>
+                                        <Assign.Value>
+                                          <InArgument x:TypeArguments="x:Int32">[convert.ToInt32(Monday) + convert.ToInt32(Tuesday) + convert.ToInt32(Wednesday) + convert.ToInt32(Thursday) + convert.ToInt32(Friday) + convert.ToInt32(Saturday) + convert.ToInt32(Sunday) + convert.ToInt32(WFH) + convert.ToInt32(Office) + convert.ToInt32(Travelling) + convert.ToInt32(Tested) + convert.ToInt32(Quarantine) + convert.ToInt32(COVID19) + convert.ToInt32(PublicTrans) + convert.ToInt32(NonEmployees) + convert.ToInt32(CountryTravel01) + convert.ToInt32(CountryTravel02)]</InArgument>
+                                        </Assign.Value>
+                                      </Assign>
+                                      <ui:ExcelWriteCell Cell="[RiskCell]" DisplayName="Write Risk Inidcator Value to Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_28" SheetName="Sheet1" Text="[Risk.ToString]" />
+                                      <ui:ExcelWriteCell Cell="[&quot;AH&quot; + (theCurrentRow + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="338,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_61" SheetName="Sheet1" Text="[now.ToShortDateString]" />
+                                      <Assign DisplayName="Set Update Flag" sap:VirtualizedContainerService.HintSize="338,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_23">
+                                        <Assign.To>
+                                          <OutArgument x:TypeArguments="x:String">[updateYes]</OutArgument>
+                                        </Assign.To>
+                                        <Assign.Value>
+                                          <InArgument x:TypeArguments="x:String">Yes</InArgument>
+                                        </Assign.Value>
+                                      </Assign>
+                                    </Sequence>
+                                  </If.Then>
+                                </If>
+                              </Sequence>
+                            </ActivityAction>
+                          </ui:ForEachRow.Body>
+                        </ui:ForEachRow>
+                        <If Condition="[updateYes = &quot;No&quot;]" DisplayName="If UPDATE failed this must be a new entry" sap:VirtualizedContainerService.HintSize="1082.66666666667,7163.33333333333" sap2010:WorkflowViewState.IdRef="If_8">
+                          <If.Then>
+                            <Sequence DisplayName="Add a new row (at end of exitsing rows)" sap:VirtualizedContainerService.HintSize="702.666666666667,7014" sap2010:WorkflowViewState.IdRef="Sequence_23">
+                              <Sequence.Variables>
+                                <Variable x:TypeArguments="sd:DataTable" Name="EmployeeData2" />
+                                <Variable x:TypeArguments="x:Int32" Name="theCurrentRow2" />
+                              </Sequence.Variables>
+                              <sap:WorkflowViewStateService.ViewState>
+                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                </scg:Dictionary>
+                              </sap:WorkflowViewStateService.ViewState>
+                              <Assign sap:VirtualizedContainerService.HintSize="660.666666666667,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_24">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:String">[FName]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:String">
+                                    <Literal x:TypeArguments="x:String" Value="" />
+                                  </InArgument>
+                                </Assign.Value>
+                              </Assign>
+                              <Assign sap:VirtualizedContainerService.HintSize="660.666666666667,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_25">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:String">[SName]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:String">
+                                    <Literal x:TypeArguments="x:String" Value="" />
+                                  </InArgument>
+                                </Assign.Value>
+                              </Assign>
+                              <ui:ExcelWriteCell Cell="[&quot;A&quot;+ str(EmployeeData.Rows.Count + 2).trim()]" DisplayName="Write Start Of Week Cell" sap:VirtualizedContainerService.HintSize="660.666666666667,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_29" SheetName="Sheet1" Text="[theStartofWeek.ToString]" />
+                              <ui:ExcelWriteCell Cell="[&quot;B&quot;+ str(EmployeeData.Rows.Count + 2).trim()]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="660.666666666667,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_30" SheetName="Sheet1" Text="[theEmployee]" />
+                              <ui:ExcelReadRange AddHeaders="True" DataTable="[EmployeeData2]" DisplayName="Read Range Again with the new values" sap:VirtualizedContainerService.HintSize="660.666666666667,58.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelReadRange_4" SheetName="Sheet1">
+                                <ui:ExcelReadRange.Range>
+                                  <InArgument x:TypeArguments="x:String">
+                                    <Literal x:TypeArguments="x:String" Value="" />
+                                  </InArgument>
+                                </ui:ExcelReadRange.Range>
+                              </ui:ExcelReadRange>
+                              <ui:ForEachRow CurrentIndex="[theCurrentRow2]" DataTable="[EmployeeData2]" DisplayName="For Each Row in Excel" sap:VirtualizedContainerService.HintSize="660.666666666667,6367.33333333333" sap2010:WorkflowViewState.IdRef="ForEachRow_4">
+                                <ui:ForEachRow.Body>
+                                  <ActivityAction x:TypeArguments="sd:DataRow">
+                                    <ActivityAction.Argument>
+                                      <DelegateInArgument x:TypeArguments="sd:DataRow" Name="employee2" />
+                                    </ActivityAction.Argument>
+                                    <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="610,6218.66666666667" sap2010:WorkflowViewState.IdRef="Sequence_22">
+                                      <sap:WorkflowViewStateService.ViewState>
+                                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                        </scg:Dictionary>
+                                      </sap:WorkflowViewStateService.ViewState>
+                                      <If Condition="[employee2.Item(&quot;Email&quot;).ToString.Contains(theEmployee) and FName = &quot;&quot; and SName = &quot;&quot;]" DisplayName="As we loop - get the name of the employee" sap:VirtualizedContainerService.HintSize="568,400" sap2010:WorkflowViewState.IdRef="If_6">
+                                        <If.Then>
+                                          <Sequence sap:VirtualizedContainerService.HintSize="380,250.666666666667" sap2010:WorkflowViewState.IdRef="Sequence_19">
+                                            <sap:WorkflowViewStateService.ViewState>
+                                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                              </scg:Dictionary>
+                                            </sap:WorkflowViewStateService.ViewState>
+                                            <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="338,158.666666666667" sap2010:WorkflowViewState.IdRef="MultipleAssign_11">
+                                              <ui:MultipleAssign.AssignOperations>
+                                                <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_115">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[FName]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[employee2.Item("First Name").ToString]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_116">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[SName]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[employee2.Item("Last Name").ToString]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_161">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Department]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[employee2.Item("Department").ToString]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                </scg:List>
+                                              </ui:MultipleAssign.AssignOperations>
+                                            </ui:MultipleAssign>
+                                          </Sequence>
+                                        </If.Then>
+                                      </If>
+                                      <If Condition="[employee2.Item(&quot;Email&quot;).ToString.Contains(theEmployee) and employee2.Item(&quot;Week Start&quot;).ToString.Contains(theStartofWeek.ToString)]" DisplayName="When we find the new row" sap:VirtualizedContainerService.HintSize="568,5686.66666666667" sap2010:WorkflowViewState.IdRef="If_7">
+                                        <If.Then>
+                                          <Sequence sap:VirtualizedContainerService.HintSize="422,5537.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_21">
+                                            <sap:WorkflowViewStateService.ViewState>
+                                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                              </scg:Dictionary>
+                                            </sap:WorkflowViewStateService.ViewState>
+                                            <Assign sap:VirtualizedContainerService.HintSize="380,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_26">
+                                              <Assign.To>
+                                                <OutArgument x:TypeArguments="x:String">[theCell]</OutArgument>
+                                              </Assign.To>
+                                              <Assign.Value>
+                                                <InArgument x:TypeArguments="x:String">[EmployeeData2.Columns.IndexOf(theDay).ToString]</InArgument>
+                                              </Assign.Value>
+                                            </Assign>
+                                            <Sequence sap:VirtualizedContainerService.HintSize="380,281.333333333333" sap2010:WorkflowViewState.IdRef="Sequence_20">
+                                              <sap:WorkflowViewStateService.ViewState>
+                                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                                </scg:Dictionary>
+                                              </sap:WorkflowViewStateService.ViewState>
+                                              <ui:MultipleAssign DisplayName="Calc the Cell Positions and New Values" sap:VirtualizedContainerService.HintSize="338,189.333333333333" sap2010:WorkflowViewState.IdRef="MultipleAssign_12">
+                                                <ui:MultipleAssign.AssignOperations>
+                                                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
+                                                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_117">
+                                                      <ui:AssignOperation.To>
+                                                        <OutArgument x:TypeArguments="x:Int32">[theIntCell]</OutArgument>
+                                                      </ui:AssignOperation.To>
+                                                      <ui:AssignOperation.Value>
+                                                        <InArgument x:TypeArguments="x:Int32">[Int32.parse(theCell)]</InArgument>
+                                                      </ui:AssignOperation.Value>
+                                                    </ui:AssignOperation>
+                                                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_118">
+                                                      <ui:AssignOperation.To>
+                                                        <OutArgument x:TypeArguments="x:Int32">[modulo]</OutArgument>
+                                                      </ui:AssignOperation.To>
+                                                      <ui:AssignOperation.Value>
+                                                        <InArgument x:TypeArguments="x:Int32">[(theIntCell) mod 26]</InArgument>
+                                                      </ui:AssignOperation.Value>
+                                                    </ui:AssignOperation>
+                                                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_119">
+                                                      <ui:AssignOperation.To>
+                                                        <OutArgument x:TypeArguments="x:String">[Column_Name]</OutArgument>
+                                                      </ui:AssignOperation.To>
+                                                      <ui:AssignOperation.Value>
+                                                        <InArgument x:TypeArguments="x:String">[Convert.ToChar(65 + modulo).ToString()]</InArgument>
+                                                      </ui:AssignOperation.Value>
+                                                    </ui:AssignOperation>
+                                                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_120">
+                                                      <ui:AssignOperation.To>
+                                                        <OutArgument x:TypeArguments="x:String">[theCellID]</OutArgument>
+                                                      </ui:AssignOperation.To>
+                                                      <ui:AssignOperation.Value>
+                                                        <InArgument x:TypeArguments="x:String">[Column_Name + (theCurrentRow2 + 2).ToString]</InArgument>
+                                                      </ui:AssignOperation.Value>
+                                                    </ui:AssignOperation>
+                                                  </scg:List>
+                                                </ui:MultipleAssign.AssignOperations>
+                                              </ui:MultipleAssign>
+                                            </Sequence>
+                                            <ui:ExcelWriteCell Cell="[&quot;C&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_31" SheetName="Sheet1" Text="[FName]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;D&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_32" SheetName="Sheet1" Text="[SName]" />
+                                            <Assign sap:VirtualizedContainerService.HintSize="380,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_32">
+                                              <Assign.To>
+                                                <OutArgument x:TypeArguments="x:String">[theLocation]</OutArgument>
+                                              </Assign.To>
+                                              <Assign.Value>
+                                                <InArgument x:TypeArguments="x:String">[LocationGEN.ToString]</InArgument>
+                                              </Assign.Value>
+                                            </Assign>
+                                            <ui:ExcelWriteCell Cell="[&quot;F&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_64" SheetName="Sheet1" Text="[theLocation]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;E&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_62" SheetName="Sheet1" Text="[Department]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;O&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_35" SheetName="Sheet1" Text="[WFH]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;P&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_36" SheetName="Sheet1" Text="[Office]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;Q&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_37" SheetName="Sheet1" Text="[OfficeRoad]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;R&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_38" SheetName="Sheet1" Text="[OfficeNo]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;S&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_39" SheetName="Sheet1" Text="[Travelling]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;T&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_40" SheetName="Sheet1" Text="[Tested]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;U&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_41" SheetName="Sheet1" Text="[Quarantine]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;V&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_42" SheetName="Sheet1" Text="[COVID19]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;W&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_43" SheetName="Sheet1" Text="[PublicTrans]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;X&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_44" SheetName="Sheet1" Text="[NonEmployees]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;Y&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_45" SheetName="Sheet1" Text="[CountryTravel01]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;Z&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_46" SheetName="Sheet1" Text="[TravelCity01]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;AA&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_34" SheetName="Sheet1" Text="[travel01Start]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;AB&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_47" SheetName="Sheet1" Text="[Travel01End]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;AC&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_48" SheetName="Sheet1" Text="[CountryTravel02]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;AD&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_49" SheetName="Sheet1" Text="[TravelCity02]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;AE&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_50" SheetName="Sheet1" Text="[Travel02Start]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;AF&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_51" SheetName="Sheet1" Text="[Travel02End]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;H&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_52" SheetName="Sheet1" Text="0" />
+                                            <ui:ExcelWriteCell Cell="[&quot;I&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_53" SheetName="Sheet1" Text="0" />
+                                            <ui:ExcelWriteCell Cell="[&quot;J&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_54" SheetName="Sheet1" Text="0" />
+                                            <ui:ExcelWriteCell Cell="[&quot;K&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_55" SheetName="Sheet1" Text="0" />
+                                            <ui:ExcelWriteCell Cell="[&quot;L&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_56" SheetName="Sheet1" Text="0" />
+                                            <ui:ExcelWriteCell Cell="[&quot;M&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_57" SheetName="Sheet1" Text="0" />
+                                            <ui:ExcelWriteCell Cell="[&quot;N&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_58" SheetName="Sheet1" Text="0" />
+                                            <ui:MultipleAssign DisplayName="Convert Str to Int" sap:VirtualizedContainerService.HintSize="380,588" sap2010:WorkflowViewState.IdRef="MultipleAssign_15">
+                                              <ui:MultipleAssign.AssignOperations>
+                                                <scg:List x:TypeArguments="ui:AssignOperation" Capacity="32">
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_140">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Monday]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(CInt(Monday) &gt;37,"3","0")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_141">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Tuesday]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(CInt(Tuesday)&gt;37,“3”,“0”)]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_142">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Wednesday]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(CInt(Wednesday)&gt;37,“3”,“0”)]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_143">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Thursday]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(CInt(Thursday)&gt;37,“3”,“0”)]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_144">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Friday]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(CInt(Friday)&gt;37,“3”,“0”)]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_145">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Saturday]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(CInt(Saturday)&gt;37,“3”,“0”)]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_146">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Sunday]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(CInt(Sunday)&gt;37,“3”,“0”)]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_147">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[WFH]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[If(WFH="Yes","0","2")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_148">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Travelling]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(Travelling="Yes","2","0")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_149">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Office]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[If(Office IsNot Nothing,"1","0")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_150">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Tested]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(Travelling="Yes","1","0")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_151">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[Quarantine]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(Quarantine="Yes","1","0")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_152">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[COVID19]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(COVID19="Yes","9","0")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_153">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[PublicTrans]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(PublicTrans="Yes","2","0")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_154">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[NonEmployees]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(NonEmployees="Yes","1","0")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_155">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[CountryTravel01]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(CountryTravel01="Yes","3","0")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                  <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_156">
+                                                    <ui:AssignOperation.To>
+                                                      <OutArgument x:TypeArguments="x:String">[CountryTravel02]</OutArgument>
+                                                    </ui:AssignOperation.To>
+                                                    <ui:AssignOperation.Value>
+                                                      <InArgument x:TypeArguments="x:String">[IF(CountryTravel02="Yes","3","0")]</InArgument>
+                                                    </ui:AssignOperation.Value>
+                                                  </ui:AssignOperation>
+                                                </scg:List>
+                                              </ui:MultipleAssign.AssignOperations>
+                                            </ui:MultipleAssign>
+                                            <Assign DisplayName="Calculate RISK Indicator" sap:VirtualizedContainerService.HintSize="380,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_28">
+                                              <Assign.To>
+                                                <OutArgument x:TypeArguments="x:Int32">[Risk]</OutArgument>
+                                              </Assign.To>
+                                              <Assign.Value>
+                                                <InArgument x:TypeArguments="x:Int32">[convert.ToInt32(Monday) + convert.ToInt32(Tuesday) + convert.ToInt32(Wednesday) + convert.ToInt32(Thursday) + convert.ToInt32(Friday) + convert.ToInt32(Saturday) + convert.ToInt32(Sunday) + convert.ToInt32(WFH) + convert.ToInt32(Office) + convert.ToInt32(Travelling) + convert.ToInt32(Tested) + convert.ToInt32(Quarantine) + convert.ToInt32(COVID19) + convert.ToInt32(PublicTrans) + convert.ToInt32(NonEmployees) + convert.ToInt32(CountryTravel01) + convert.ToInt32(CountryTravel02)]</InArgument>
+                                              </Assign.Value>
+                                            </Assign>
+                                            <ui:ExcelWriteCell Cell="[&quot;G&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Risk Inidcator Value to Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_59" SheetName="Sheet1" Text="[Risk.ToString]" />
+                                            <ui:ExcelWriteCell Cell="[&quot;AH&quot; + (theCurrentRow2 + 2).ToString]" DisplayName="Write Cell" sap:VirtualizedContainerService.HintSize="380,86.6666666666667" sap2010:WorkflowViewState.IdRef="ExcelWriteCell_60" SheetName="Sheet1" Text="[now.ToShortDateString]" />
+                                            <Assign sap:VirtualizedContainerService.HintSize="380,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_27">
+                                              <Assign.To>
+                                                <OutArgument x:TypeArguments="x:String">[updateYes]</OutArgument>
+                                              </Assign.To>
+                                              <Assign.Value>
+                                                <InArgument x:TypeArguments="x:String">Yes</InArgument>
+                                              </Assign.Value>
+                                            </Assign>
+                                            <ui:InvokeCode ContinueOnError="{x:Null}" Code="Array.ForEach(Directory.GetFiles(&quot;C:\Temp\&quot;),Sub(x) File.Delete(x))" DisplayName="Invoke code" sap:VirtualizedContainerService.HintSize="380,164" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
+                                              <ui:InvokeCode.Arguments>
+                                                <scg:Dictionary x:TypeArguments="x:String, Argument" />
+                                              </ui:InvokeCode.Arguments>
+                                            </ui:InvokeCode>
+                                          </Sequence>
+                                        </If.Then>
+                                      </If>
+                                    </Sequence>
+                                  </ActivityAction>
+                                </ui:ForEachRow.Body>
+                              </ui:ForEachRow>
+                            </Sequence>
+                          </If.Then>
+                          <If.Else>
+                            <ui:InvokeCode ContinueOnError="{x:Null}" Code="Array.ForEach(Directory.GetFiles(&quot;C:\Temp\&quot;),Sub(x) File.Delete(x))" DisplayName="Invoke code" sap:VirtualizedContainerService.HintSize="334,164" sap2010:WorkflowViewState.IdRef="InvokeCode_2">
+                              <ui:InvokeCode.Arguments>
+                                <scg:Dictionary x:TypeArguments="x:String, Argument" />
+                              </ui:InvokeCode.Arguments>
+                            </ui:InvokeCode>
+                          </If.Else>
+                        </If>
+                      </Sequence>
+                    </ActivityAction>
+                  </ui:ExcelApplicationScope.Body>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:ExcelApplicationScope>
+                <ui:MoveOutlookMessage Account="{x:Null}" DisplayName="Move Outlook Mail Message" sap:VirtualizedContainerService.HintSize="1158.66666666667,86.6666666666667" sap2010:WorkflowViewState.IdRef="MoveOutlookMessage_1" MailFolder="[Settings(&quot;HARIAArchiveQueue&quot;).ToString]" MailMessage="[report]" />
+              </Sequence>
+            </TryCatch.Try>
+            <TryCatch.Catches>
+              <Catch x:TypeArguments="s:Exception" sap:VirtualizedContainerService.HintSize="1205.33333333333,21.3333333333333" sap2010:WorkflowViewState.IdRef="Catch`1_1">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ActivityAction x:TypeArguments="s:Exception">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                  </ActivityAction.Argument>
+                  <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="334,93.3333333333333" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Error" Message="[exception.Source.ToString+&quot; &quot;+ exception.Message.ToString]" />
+                </ActivityAction>
+              </Catch>
+            </TryCatch.Catches>
+          </TryCatch>
+        </ActivityAction>
+      </ui:ForEach.Body>
+    </ui:ForEach>
+  </Sequence>
+</Activity>
